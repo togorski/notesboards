@@ -1,7 +1,9 @@
 import React, { useState } from "react"
 
-const BoardForm = ({ onSubmit }) => {
-    const [boardName, setBoardName] = useState("")
+//decide if should be te same as board form or not
+const BoardEditForm = ({ onSubmit, board }) => {
+
+    const [boardName, setBoardName] = useState(board.name)
     const [error, setError] = useState("")
 
     const handleOnSubmit = (e) => {
@@ -24,10 +26,10 @@ const BoardForm = ({ onSubmit }) => {
             <form onSubmit={handleOnSubmit}>
                 {error && <p>{error}</p>}
                 <input type="text" placeholder="Board Name" onChange={handleOnChange} value={boardName}></input>
-                <button>Create</button>
+                <button>Save</button>
             </form>
         </div>
     )
 }
 
-export default BoardForm
+export default BoardEditForm
