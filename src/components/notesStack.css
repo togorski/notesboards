@@ -1,0 +1,10 @@
+.paper {
+    background-color: #fff;
+    border: 1px solid #000;
+    /* Need position to allow stacking of pseudo-elements */
+    /* position: absolute; */
+    /* Padding for demo purposes */
+    padding: 30px;
+    width: 100px;
+    height: 100px;
+  }

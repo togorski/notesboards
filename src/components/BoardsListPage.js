@@ -1,20 +1,18 @@
-import React from "react"
-import { connect } from "react-redux"
+import React, { useEffect } from "react"
 import BoardForm from "./BoardForm"
 import BoardList from "./BoardsList"
-import { startAddBoard } from "../actions/boards"
+import { startCreateBoard, startFetchBoards } from "../actions/boards"
+import { useDispatch, useSelector } from "react-redux"
 
-const BoardsPage = ({ startAddBoard }) => (
-    <div>
-        <BoardList />
-        <BoardForm onSubmit={startAddBoard}/>
-    </div>
-)
+const BoardsPage = (props) => {
+    const dispatch = useDispatch()
+// MOVE START CREATE BOARD TO BOARD FORM
+    return (
+        <div>
+            <BoardList />
+            <BoardForm onSubmit={(board) => dispatch(startCreateBoard(board))}/>
+        </div>
+    )
+}
 
-const mapDispatchToProps = (dispatch) => ({
-    startAddBoard: (board) => {
-        dispatch(startAddBoard(board))
-    }
-})
-
-export default connect(null, mapDispatchToProps)(BoardsPage)
+export default BoardsPage

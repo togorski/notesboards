@@ -1,39 +1,41 @@
 import React, { useEffect } from "react"
-import { connect } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import BoardCard from "./BoardCard"
-import { startFetchBoards, setCurrentBoard } from "../actions/boards"
+import { startFetchBoards } from "../actions/boards"
+// import { startFetchBoards, setCurrentBoard } from "../actions/boards"
 
-const BoardsList = ({boards = [], startFetchBoards, setCurrentBoard}) => {
-    
+const BoardsList = () => {
+    const dispatch = useDispatch()
+
+    const boardsList = useSelector(state => state.boardsList)
+    const { loading: boardsListLoading, boards, error: boardsListError } = boardsList
+
+    const boardCreate = useSelector(state => state.boardCreate)
+    const { success: successCreate } = boardCreate
+
     useEffect(() => {
-        startFetchBoards()
-    }, []) // move fetch to page
+        dispatch(startFetchBoards())
+    }, [successCreate]) // move fetch to page
 
     return (
+
         <div>
-            {boards.map((board) => {
-                return (
-                <Link to={board.id} key={board.id} onClick={() => setCurrentBoard(board)}>   
-                    <BoardCard board={board}/>
-                </Link>    
-                )
-            })}
+            {
+                boardsListLoading ? <div>Loading...</div> :
+                boards.length === 0 ? <div>No boards</div> :
+                
+                boards.map((board) => {
+                    return (
+                    // <Link to={board.id} key={board.id} onClick={() => setCurrentBoard(board)}>   
+                    <Link to={"boards/" + board.id} key={board.id}>   
+                        <BoardCard board={board}/>
+                    </Link>    
+                    )
+                })
+            }
         </div>
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        boards: state.boards.boardsList
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        startFetchBoards: () => dispatch(startFetchBoards()),
-        setCurrentBoard: (board) => dispatch(setCurrentBoard(board))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BoardsList)
+export default BoardsList

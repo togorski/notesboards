@@ -19,25 +19,41 @@ const reduxState = {
                 id: "note1",
                 board: "board1",
                 title: "bleble",
-                body: "ebe ebe"
+                body: "ebe ebe",
+                position: {
+                    x: Math.random() * 400,
+                    y: Math.random() * 400
+                }
             },
             "note2" : {
                 id: "note2",
                 board: "board1",
                 title: "ebe",
-                body: "ebe"
+                body: "ebe",
+                position: {
+                    x: Math.random() * 400,
+                    y: Math.random() * 400
+                }
             },
             "note3" : {
                 id: "note3",
                 board: "board2",
                 title: "aha",
-                body: "ehe"
+                body: "ehe",
+                position: {
+                    x: Math.random() * 400,
+                    y: Math.random() * 400
+                }
             },
             "note4" : {
                 id: "note4",
                 board: "board2",
                 title: "ehe",
-                body: "haha"
+                body: "haha",
+                position: {
+                    x: Math.random() * 400,
+                    y: Math.random() * 400
+                }
             }
         }
     }

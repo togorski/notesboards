@@ -1,31 +1,41 @@
 import React, { useState, useContext } from "react"
 import BoardEditForm from "./BoardEditForm"
 import BoardsContext from "../context/boards-context"
-
-// rename below and move to separate file
-const ShowBoardHeader = ({ board }) => (
-    <h1>
-        {board.name}
-    </h1>
-)
+import { startEditBoard, startDeleteBoard } from "../actions/boards"
+import { useDispatch, useSelector } from "react-redux"
 
 const BoardHeader = () => {
     const [editMode, setEditMode] = useState(false)
-    const { boardsActions, currentBoard } = useContext(BoardsContext)
-    const { startEditBoard, startDeleteBoard } = boardsActions
+    
+    const dispatch = useDispatch()
+    const boardDetails = useSelector(state => state.boardDetails)
+    const { board } = boardDetails
+    const boardEdit = useSelector(state => state.boardEdit)
+    const { success: boardEditSuccess, loading: boardEditLoading, error: boardEditError } = boardEdit
 
-    const onSubmit = (board) => {
-        startEditBoard(currentBoard.id, board)
+    const onSubmit = (boardUpdate) => {
+        dispatch(startEditBoard(board.id, boardUpdate))
         setEditMode(false)
+        // board.name = boardUpdate.name
     }
 
     // handleOnDelete // push history back to the main page, delete all notes that were attached - create action delete notes where board = board.id
 
     return (
         <div>
-            {editMode ? <BoardEditForm board={currentBoard} onSubmit={onSubmit} /> : <ShowBoardHeader board={currentBoard}/>}
-            {!editMode && <button onClick={() => setEditMode(true)}>Edit</button>}
-            {<button onClick={() => startDeleteBoard(currentBoard.id)}>Delete</button>}
+            {/* replace with loader */}
+            { boardEditLoading && <p>Board Edit Loading</p> }
+            { boardEditError && <p>Board Edit Error: {boardEditError}</p> }
+            {editMode ? 
+            <BoardEditForm board={board} onSubmit={onSubmit} /> :
+                <>
+                    <h1>
+                        {board.name}
+                    </h1>
+                    <button onClick={() => setEditMode(true)}>Edit</button>
+                </>
+            }
+            {<button onClick={() => dispatch(startDeleteBoard(board.id))}>Delete</button>}
         </div>
     )
 }

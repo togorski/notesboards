@@ -1,127 +1,213 @@
 import { combineReducers } from "redux"
-import { FETCH_BOARDS_BEGIN, FETCH_BOARDS_SUCCESS, FETCH_BOARDS_ERROR, SET_CURRENT_BOARD, DELETE_BOARD_BEGIN, DELETE_BOARD_SUCCESS } from "../actions/boards"
-import { ADD_BOARD_BEGIN, ADD_BOARD_SUCCESS, ADD_BOARD_ERROR } from "../actions/boards"
-import { EDIT_BOARD_BEGIN, EDIT_BOARD_SUCCESS, EDIT_BOARD_ERROR } from "../actions/boards"
+import { FETCH_BOARDS_BEGIN, FETCH_BOARDS_SUCCESS, FETCH_BOARDS_ERROR, SET_CURRENT_BOARD, DELETE_BOARD_BEGIN, DELETE_BOARD_SUCCESS, DELETE_BOARD_ERROR, FETCH_BOARD_DETAILS_BEGIN, FETCH_BOARD_DETAILS_SUCCESS, FETCH_BOARD_DETAILS_ERROR, RESET_DELETE_BOARD, RESET_FETCH_BOARD_DETAILS } from "../constants/boardsConstants"
+import { CREATE_BOARD_BEGIN, CREATE_BOARD_SUCCESS, CREATE_BOARD_ERROR } from "../constants/boardsConstants"
+import { EDIT_BOARD_BEGIN, EDIT_BOARD_SUCCESS, EDIT_BOARD_ERROR } from "../constants/boardsConstants"
 
 const initialState = {
-    boardsList: [],
-    currentBoard: {},
+    boardsList: {boards: [], loading: false, error: null},
+    activeBoard: {board: {}, loading: false, error: null},
+    newBoard: {board: {}, loading: false, error: null},
+    
     loading: false,
     error: null
 }
 
-export default (state = initialState, action) => {
+// export default (state = initialState, action) => {
+//     switch (action.type) {
+//         case CREATE_BOARD_BEGIN:
+//             return {
+//                 ...state,
+//                 loading: true
+//             }
+//         case CREATE_BOARD_SUCCESS:
+//             return {
+//                 ...state,
+//                 loading: false,
+//                 boardsList: [...state.boardsList, action.payload.board]
+//             }
+//         case EDIT_BOARD_BEGIN:
+//             return {
+//                 ...state,
+//                 loading: true
+//             }
+//         case EDIT_BOARD_SUCCESS:
+//             return {
+//                 ...state,
+//                 loading: false,
+//                 boardsList: state.boardsList.map((board) => {
+//                     if (board.id === action.payload.id) {
+//                         return {
+//                             ...board,
+//                             ...action.payload.updates
+//                         }
+//                     } else {
+//                         return board
+//                     }
+//                 })
+//             }
+//         case DELETE_BOARD_BEGIN:
+//             return {
+//                 ...state,
+//                 loading: true
+//             }
+//         case DELETE_BOARD_SUCCESS:
+//             return {
+//                 ...state,
+//                 loading: false,
+//                 boardsList: state.boardsList.filter((board) => {
+//                     return board.id !== action.payload.id
+//                 })
+//             }
+//         case FETCH_BOARDS_BEGIN:
+//             return {
+//                 ...state,
+//                 loading: true
+//             }
+//         case FETCH_BOARDS_SUCCESS:
+//             return {
+//                 ...state,
+//                 loading: false,
+//                 boardsList: action.payload.boardsList
+//             }
+//         case SET_CURRENT_BOARD:
+//             return {
+//                 ...state,
+//                 currentBoard: action.payload.board
+//             }
+//         default:
+//             return state
+//     }
+// }
+
+const boardDetailsReducer = (state = { board: {} }, action) => {
     switch (action.type) {
-        case ADD_BOARD_BEGIN:
+        case FETCH_BOARD_DETAILS_BEGIN:
             return {
-                ...state,
                 loading: true
             }
-        case ADD_BOARD_SUCCESS:
+        case FETCH_BOARD_DETAILS_SUCCESS:
             return {
-                ...state,
                 loading: false,
-                boardsList: [...state.boardsList, action.payload.board]
+                board: action.payload,
+                success: true
             }
-        case EDIT_BOARD_BEGIN:
+        case FETCH_BOARD_DETAILS_ERROR:
             return {
-                ...state,
-                loading: true
+                loading: false,
+                error: action.payload
+            }
+        case RESET_FETCH_BOARD_DETAILS:
+            return {
+                board: {}, loading: false, error: null
             }
         case EDIT_BOARD_SUCCESS:
             return {
                 ...state,
-                loading: false,
-                boardsList: state.boardsList.map((board) => {
-                    if (board.id === action.payload.id) {
-                        return {
-                            ...board,
-                            ...action.payload.updates
-                        }
-                    } else {
-                        return board
-                    }
-                })
+                board: {...state.board, ...action.payload.updates}
             }
-        case DELETE_BOARD_BEGIN:
+        default:
+            return state
+        }
+}
+
+const boardCreateReducer = (state = { board: {} }, action) => {
+    switch (action.type) {
+        case CREATE_BOARD_BEGIN:
             return {
-                ...state,
                 loading: true
             }
-        case DELETE_BOARD_SUCCESS:
+        case CREATE_BOARD_SUCCESS:
             return {
-                ...state,
                 loading: false,
-                boardsList: state.boardsList.filter((board) => {
-                    return board.id !== action.payload.id
-                })
+                board: action.payload,
+                success: true
             }
-        case FETCH_BOARDS_BEGIN:
+        case CREATE_BOARD_ERROR:
             return {
-                ...state,
+                loading: false,
+                error: action.payload
+            }
+        default:
+            return state
+        }
+}
+
+const boardEditReducer = (state = { board: {}} , action) => {
+    switch(action.type) {
+        case EDIT_BOARD_BEGIN:
+            return {
                 loading: true
             }
-        case FETCH_BOARDS_SUCCESS:
+        case EDIT_BOARD_SUCCESS:
             return {
-                ...state,
                 loading: false,
-                boardsList: action.payload.boardsList
+                board: action.payload,
+                success: true
             }
-        case SET_CURRENT_BOARD:
+        case EDIT_BOARD_ERROR:
             return {
-                ...state,
-                currentBoard: action.payload.board
+                loading: false,
+                error: action.payload
             }
         default:
             return state
     }
 }
 
-    // byId : {
-    //     "board1" : {
-    //         id: "board1",
-    //         name: "board first",
-    //         notes: ["note1", "note2"]
-    //     },
-    //     "board2" : {
-    //         id: "board2",
-    //         name: "board second",
-    //         notes: ["note3", "note4"]
-    //     }
-    // },
-    // allIds : ["board1", "board2"]
+// put initial states in variables
+const boardDeleteReducer = (state = {boardId: null, loading: false, error: null}, action) => {
+    switch(action.type) {
+        case DELETE_BOARD_BEGIN:
+            return {
+                loading: true
+            }
+        case DELETE_BOARD_SUCCESS:
+            return {
+                loading: false,
+                boardId: action.payload,
+                success: true
+            }
+        case DELETE_BOARD_ERROR:
+            return {
+                loading: false,
+                error: action.payload
+            }
+        case RESET_DELETE_BOARD: {
+            return {
+                boardId: null, loading: false, error: null
+            }
+        }
+        default:
+            return state
+    }
+}
 
-// const addNote = (state, action) => {
-//     const { noteId, boardId } = action.payload
+const boardsListReducer = (state = { boards: [], loading: false, error: null }, action) => {
+    switch (action.type) {
+        case FETCH_BOARDS_BEGIN:
+            return {
+                loading: true,
+                boards: []
+            }
+        case FETCH_BOARDS_SUCCESS:
+            return {
+                loading: false,
+                boards: action.payload
+            }
+        case FETCH_BOARDS_ERROR:
+            return {
+                loading: false,
+                error: action.payload
+            }
+        // INSTEAD OF BELOW - REDIRECT. TO BE DELETED
+        case CREATE_BOARD_SUCCESS:
+            return {
+                ...state,
+                boards: [...state.boards, action.payload]
+            }
+        default:
+            return state
+        }
+}
 
-//     const board = state[boardId]
-
-//     return {
-//         ...state,
-//         // update board with a note
-//         [boardId]: {
-//             ...board,
-//             notes: board.notes.concat(noteId)
-//         }
-//     }
-// }
-
-// const boardsById = (state = {}, action) => {
-//     switch (action.type) {
-//         case "ADD_NOTE":
-//             return addNote(state, action)
-//         default:
-//             return state
-//     }
-// }
-
-// const allBoards = (state = [], action) => {
-
-// }
-
-// const boardsReducer = combineReducers({
-//     byId: boardsById,
-//     allIds: allBoards
-// })
-
-// export default boardsReducer
+export { boardCreateReducer, boardEditReducer, boardDeleteReducer, boardsListReducer, boardDetailsReducer }

@@ -1,8 +1,16 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import history from '../history'
+import { startCreateBoard } from "../actions/boards"
 
-const BoardForm = ({ onSubmit }) => {
+const BoardForm = () => {
     const [boardName, setBoardName] = useState("")
     const [error, setError] = useState("")
+
+    const boardCreate = useSelector(state => state.boardCreate)
+    const { board: createdBoard, success: boardCreateSuccess, error: boardCreateError } = boardCreate
+
+    const dispatch = useDispatch()
 
     const handleOnSubmit = (e) => {
         e.preventDefault()
@@ -10,7 +18,7 @@ const BoardForm = ({ onSubmit }) => {
         if (!boardName.trim()) {
             setError("board name can't be empty")
         } else {
-            onSubmit({ name: boardName })
+            dispatch(startCreateBoard({ name: boardName }))
             setBoardName("")
         }
     }
@@ -18,6 +26,10 @@ const BoardForm = ({ onSubmit }) => {
     const handleOnChange = (e) => {
         setBoardName(e.target.value)
     }
+    
+    useEffect(() => {
+        boardCreateSuccess && history.push(`/boards/${createdBoard.id}`)
+    }, [boardCreateSuccess])
 
     return (
         <div>

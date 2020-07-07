@@ -1,23 +1,5 @@
-import { v1 as uuid } from "uuid"
-import { editNoteBegin, editNoteSucess } from "./notes"
-
-export const FETCH_BOARDS_BEGIN = "FETCH_BOARDS_BEGIN"
-export const FETCH_BOARDS_SUCCESS = "FETCH_BOARDS_SUCCESS"
-export const FETCH_BOARDS_ERROR = "FETCH_PRODUCTS_ERROR"
-
-export const ADD_BOARD_BEGIN = "ADD_BOARD_BEGIN"
-export const ADD_BOARD_SUCCESS = "ADD_BOARD_SUCCESS"
-export const ADD_BOARD_ERROR = "ADD_BOARD_ERROR"
-
-export const EDIT_BOARD_BEGIN = "EDIT_BOARD_BEGIN"
-export const EDIT_BOARD_SUCCESS = "EDIT_BOARD_SUCCESS"
-export const EDIT_BOARD_ERROR = "EDIT_BOARD_ERROR"
-
-export const DELETE_BOARD_BEGIN = "DELETE_BOARD_BEGIN"
-export const DELETE_BOARD_SUCCESS = "DELETE_BOARD_SUCCESS"
-export const DELETE_BOARD_ERROR = "DELETE_BOARD_ERROR"
-
-export const SET_CURRENT_BOARD = "SET_CURRENT_BOARD"
+import { SET_CURRENT_BOARD, CREATE_BOARD_BEGIN, CREATE_BOARD_SUCCESS, FETCH_BOARD_DETAILS_BEGIN, FETCH_BOARD_DETAILS_SUCCESS, FETCH_BOARD_DETAILS_ERROR, RESET_FETCH_BOARD_DETAILS, FETCH_BOARDS_BEGIN, FETCH_BOARDS_SUCCESS, FETCH_BOARDS_ERROR, EDIT_BOARD_BEGIN, EDIT_BOARD_SUCCESS, DELETE_BOARD_BEGIN, DELETE_BOARD_SUCCESS, CREATE_BOARD_ERROR, DELETE_BOARD_ERROR, RESET_DELETE_BOARD, EDIT_BOARD_ERROR } from "../constants/boardsConstants"
+import database from "../firebase/firebase"
 
 export const setCurrentBoard = (board = {}) => ({
     type: SET_CURRENT_BOARD,
@@ -26,33 +8,73 @@ export const setCurrentBoard = (board = {}) => ({
     }
 })
 
-export const addBoardBegin = () => ({
-    type: ADD_BOARD_BEGIN,
+export const fetchBoardDetailsBegin = () => ({
+    type: FETCH_BOARD_DETAILS_BEGIN
 })
 
-export const addBoardSuccess = (board, id) => ({
-    type: ADD_BOARD_SUCCESS,
-    payload: {
-        board: {
-            id,
-            ...board
+export const fetchBoardDetailsSuccess = (board) => ({
+    type: FETCH_BOARD_DETAILS_SUCCESS,
+    payload: board
+})
+
+export const fetchBoardDetailsError = (error) => ({
+    type: FETCH_BOARD_DETAILS_ERROR,
+    payload: error
+})
+
+export const resetFetchBoardDetails = () => ({
+    type: RESET_FETCH_BOARD_DETAILS
+})
+
+export const startFetchBoardDetails = (boardId) => {
+    return async dispatch => {
+        try {
+            dispatch(fetchBoardDetailsBegin())
+            const boardSnapshot = await database.ref(`boards/${boardId}`).once("value")
+            if (boardSnapshot.exists()) {
+                dispatch(fetchBoardDetailsSuccess({
+                    id: boardSnapshot.key,
+                    ...boardSnapshot.val()
+                }))
+            } else {
+                console.log(`Board with id ${boardId} not found`)
+                dispatch(fetchBoardDetailsError(`Board with id ${boardId} not found`))
+            }
+
+        } catch (error) {
+            console.log(error)
+            dispatch(fetchBoardDetailsError(error.message))
         }
+    }
+}
+
+export const createBoardBegin = () => ({
+    type: CREATE_BOARD_BEGIN,
+})
+
+export const createBoardSuccess = (board, id) => ({
+    type: CREATE_BOARD_SUCCESS,
+    payload: {
+        id,
+        ...board
     }
 })
 
-export const startAddBoard = (board) => {
-    return dispatch => {
-        // console.log(board)
-        dispatch(addBoardBegin())
-        const id = uuid()
-        const db = JSON.parse(localStorage.getItem("db"))
-        db.boards.byId = { ...db.boards.byId,
-            [id]: {
-            id,
-            ...board
-        }}
-        localStorage.setItem("db", JSON.stringify(db))
-        return dispatch(addBoardSuccess(board, id))
+export const createBoardError = (error) => ({
+    type: CREATE_BOARD_ERROR,
+    payload: error
+})
+
+export const startCreateBoard = (board) => {
+    return async dispatch => {
+        try {
+            dispatch(createBoardBegin())
+            const boardRef = await database.ref("boards").push({...board})
+            dispatch(createBoardSuccess(board, boardRef.key))
+        } catch (error) {
+            console.log(error)
+            dispatch(fetchBoardsError(error.message))
+        }
     }
 }
 
@@ -62,36 +84,33 @@ export const fetchBoardsBegin = () => ({
 
 export const fetchBoardsSuccess = (boardsList) => ({
     type: FETCH_BOARDS_SUCCESS,
-    payload: { boardsList }
+    payload: boardsList
 })
 
 export const fetchBoardsError = (error) => ({
     type: FETCH_BOARDS_ERROR,
-    payload: { error }
+    payload: error
 })
 
-// move to separate file?
 export const startFetchBoards = () => {
-    return dispatch => {
-        dispatch(fetchBoardsBegin())
-        // console.log(JSON.parse(localStorage.getItem("db")))
-        const boards = Object.values(JSON.parse(localStorage.getItem("db")).boards.byId)
-        // console.log(Object.values(boards))
-        return dispatch(fetchBoardsSuccess(boards))
-        // return boards
-        // return boards
-        // fetch('https://exampleapi.com/products')
-        // .then(res => res.json())
-        // .then(res => {
-        //     if(res.error) {
-        //         throw(res.error);
-        //     }
-        //     dispatch(fetchProductsSuccess(res.products);
-        //     return res.products;
-        // })
-        // .catch(error => {
-        //     dispatch(fetchProductsError(error));
-        // })
+    return async dispatch => {
+        try {
+            dispatch(fetchBoardsBegin())
+            const boardsSnap = await database.ref("boards").once("value")
+            
+            let boards = []
+    
+            boardsSnap.forEach((childSnapshot) => {
+                boards.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                })
+            })
+            dispatch(fetchBoardsSuccess(boards))
+        } catch (error) {
+            console.log(error)
+            dispatch(fetchBoardsError(error.message))
+        }
     }
 }
 
@@ -107,16 +126,29 @@ export const editBoardSuccess = (id, updates) => ({
     }
 })
 
+export const editBoardError = (error) => ({
+    type: EDIT_BOARD_ERROR,
+    payload: error
+})
+
 export const startEditBoard = (id, updates) => {
-    return dispatch => {
-        dispatch(editBoardBegin())
-        let db = JSON.parse(localStorage.getItem("db"))
-        db.boards.byId[id] = { 
-            ...db.boards.byId[id], 
-            ...updates 
+    return async dispatch => {
+        try {
+            dispatch(editBoardBegin())
+            const snapshot = await database.ref(`boards/${id}`).once("value")
+
+            if (snapshot.exists()) {
+                await database.ref(`boards/${id}`).update(updates)
+                dispatch(editBoardSuccess(id, updates)) 
+            } else {
+                console.log(`Board with id ${id} not found`)
+                dispatch(editBoardError(`Board with id ${id} not found`))
+            }
+        } catch (error) {
+            console.log(error)
+            dispatch(editBoardError(error.message))
         }
-        localStorage.setItem("db", JSON.stringify(db))
-        return dispatch(editBoardSuccess(id, updates))
+
     }
 }
 
@@ -126,26 +158,40 @@ export const deleteBoardBegin = () => ({
 
 export const deleteBoardSuccess = (id) => ({
     type: DELETE_BOARD_SUCCESS,
-    payload: {
-        id
-    }
+    payload: id
+})
+
+export const deleteBoardError = (error) => ({
+    type: DELETE_BOARD_ERROR,
+    payload: error
+})
+
+export const resetDeleteBoard = () => ({
+    type: RESET_DELETE_BOARD
 })
 
 // this will also remove assigned notes
 export const startDeleteBoard = (id) => {
-    return dispatch => {
-        dispatch(deleteBoardBegin())
-        let db = JSON.parse(localStorage.getItem("db"))
-        // remove board by dd
-        delete db.boards.byId[id]
+    return async dispatch => {
+        try {
+            dispatch(deleteBoardBegin())
+            await database.ref(`boards/${id}`).remove()
+            dispatch(deleteBoardSuccess(id))
+        } catch (error) {
+            console.log(error)
+            dispatch(deleteBoardError(error.message))
+        }
 
-        //remove note with board id
-        const filteredNotes = Object.values(db.notes.byId).filter((note) => {
-            return note.board !== id
-        })
-        
-        db.notes.byId = Object.assign({}, { ...filteredNotes })
-        localStorage.setItem("db", JSON.stringify(db))
-        dispatch(deleteBoardSuccess(id))
+        // deleted board notes cleanup in db
+        try {
+            // get all notes that belongs to deleted board
+            const notesSnap = await database.ref("notes").orderByChild("board").equalTo(id).once("value")
+            
+            // remove notes
+            notesSnap.forEach(childSnapshot => { database.ref(`notes/${childSnapshot.key}`).remove() })
+        } catch (error) {
+            console.log(error)
+            // to think on what we can do in such case - no problem for app itself, just messy database
+        }
     }
 }

@@ -1,24 +1,28 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Note from "./Note"
 import NotesContext from "../context/notes-context"
+import { useSelector, useDispatch } from "react-redux"
+import { startFetchNotes, startCreateNote } from "../actions/notes"
+import NotesStack from "./NotesStack"
 
 const NotesList = () => {
-    // useEffect(() => {
-    //     resetNoteList()
+    const notesList = useSelector(state => state.notesList)
+    const { notes, loading, error} = notesList
 
-    //     return () => {
-    //         resetNoteList()
-    //     }
-    // }, [])
-    
-    const { notesActions, notes, boardId } = useContext(NotesContext)
+    const boardId = useSelector(state => state.boardDetails.board.id)
+
+    const dispatch = useDispatch()
 
     const createNote = () => {
         const newNote = {
             title: "Note Tile",
-            body: "Note Body"
+            body: "Note Body",
+            position: {
+                x: Math.random() * 400,
+                y: Math.random() * 400
+            }
         }
-        notesActions.startAddNote(newNote, boardId)
+        dispatch(startCreateNote(newNote, boardId))
     }
 
     return (
@@ -28,9 +32,11 @@ const NotesList = () => {
                     <Note key={note.id} note={note} />
                 ))}
             </div>
+            <NotesStack />
             <button onClick={createNote}>Create New Note</button>
+            
         </div>
     )
 }
-
+// wyjebac przekazywanie boardid
 export default NotesList
