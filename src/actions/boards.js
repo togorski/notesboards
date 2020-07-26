@@ -1,4 +1,4 @@
-import { SET_CURRENT_BOARD, CREATE_BOARD_BEGIN, CREATE_BOARD_SUCCESS, FETCH_BOARD_DETAILS_BEGIN, FETCH_BOARD_DETAILS_SUCCESS, FETCH_BOARD_DETAILS_ERROR, RESET_FETCH_BOARD_DETAILS, FETCH_BOARDS_BEGIN, FETCH_BOARDS_SUCCESS, FETCH_BOARDS_ERROR, EDIT_BOARD_BEGIN, EDIT_BOARD_SUCCESS, DELETE_BOARD_BEGIN, DELETE_BOARD_SUCCESS, CREATE_BOARD_ERROR, DELETE_BOARD_ERROR, RESET_DELETE_BOARD, EDIT_BOARD_ERROR } from "../constants/boardsConstants"
+import { SET_CURRENT_BOARD, CREATE_BOARD_BEGIN, CREATE_BOARD_SUCCESS, FETCH_BOARD_DETAILS_BEGIN, FETCH_BOARD_DETAILS_SUCCESS, FETCH_BOARD_DETAILS_ERROR, RESET_FETCH_BOARD_DETAILS, FETCH_BOARDS_BEGIN, FETCH_BOARDS_SUCCESS, FETCH_BOARDS_ERROR, EDIT_BOARD_BEGIN, EDIT_BOARD_SUCCESS, DELETE_BOARD_BEGIN, DELETE_BOARD_SUCCESS, CREATE_BOARD_ERROR, DELETE_BOARD_ERROR, RESET_DELETE_BOARD, EDIT_BOARD_ERROR, RESET_CREATE_BOARD } from "../constants/boardsConstants"
 import database from "../firebase/firebase"
 
 export const setCurrentBoard = (board = {}) => ({
@@ -27,10 +27,11 @@ export const resetFetchBoardDetails = () => ({
 })
 
 export const startFetchBoardDetails = (boardId) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            const uid = getState().auth.uid
             dispatch(fetchBoardDetailsBegin())
-            const boardSnapshot = await database.ref(`boards/${boardId}`).once("value")
+            const boardSnapshot = await database.ref(`users/${uid}/boards/${boardId}`).once("value")
             if (boardSnapshot.exists()) {
                 dispatch(fetchBoardDetailsSuccess({
                     id: boardSnapshot.key,
@@ -65,11 +66,16 @@ export const createBoardError = (error) => ({
     payload: error
 })
 
+export const resetCreateBoard = () => ({
+    type: RESET_CREATE_BOARD
+})
+
 export const startCreateBoard = (board) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            const uid = getState().auth.uid
             dispatch(createBoardBegin())
-            const boardRef = await database.ref("boards").push({...board})
+            const boardRef = await database.ref(`users/${uid}/boards`).push({...board})
             dispatch(createBoardSuccess(board, boardRef.key))
         } catch (error) {
             console.log(error)
@@ -93,10 +99,11 @@ export const fetchBoardsError = (error) => ({
 })
 
 export const startFetchBoards = () => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            const uid = getState().auth.uid
             dispatch(fetchBoardsBegin())
-            const boardsSnap = await database.ref("boards").once("value")
+            const boardsSnap = await database.ref(`users/${uid}/boards`).once("value")
             
             let boards = []
     
@@ -132,13 +139,14 @@ export const editBoardError = (error) => ({
 })
 
 export const startEditBoard = (id, updates) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            const uid = getState().auth.uid
             dispatch(editBoardBegin())
-            const snapshot = await database.ref(`boards/${id}`).once("value")
+            const snapshot = await database.ref(`users/${uid}/boards/${id}`).once("value")
 
             if (snapshot.exists()) {
-                await database.ref(`boards/${id}`).update(updates)
+                await database.ref(`users/${uid}/boards/${id}`).update(updates)
                 dispatch(editBoardSuccess(id, updates)) 
             } else {
                 console.log(`Board with id ${id} not found`)
@@ -148,7 +156,6 @@ export const startEditBoard = (id, updates) => {
             console.log(error)
             dispatch(editBoardError(error.message))
         }
-
     }
 }
 
@@ -172,10 +179,11 @@ export const resetDeleteBoard = () => ({
 
 // this will also remove assigned notes
 export const startDeleteBoard = (id) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            var uid = getState().auth.uid
             dispatch(deleteBoardBegin())
-            await database.ref(`boards/${id}`).remove()
+            await database.ref(`users/${uid}/boards/${id}`).remove()
             dispatch(deleteBoardSuccess(id))
         } catch (error) {
             console.log(error)
@@ -185,10 +193,10 @@ export const startDeleteBoard = (id) => {
         // deleted board notes cleanup in db
         try {
             // get all notes that belongs to deleted board
-            const notesSnap = await database.ref("notes").orderByChild("board").equalTo(id).once("value")
+            const notesSnap = await database.ref(`users/${uid}/notes`).orderByChild("board").equalTo(id).once("value")
             
             // remove notes
-            notesSnap.forEach(childSnapshot => { database.ref(`notes/${childSnapshot.key}`).remove() })
+            notesSnap.forEach(childSnapshot => { database.ref(`users/${uid}/notes/${childSnapshot.key}`).remove() })
         } catch (error) {
             console.log(error)
             // to think on what we can do in such case - no problem for app itself, just messy database

@@ -22,9 +22,9 @@ const BoardHeader = () => {
     // handleOnDelete // push history back to the main page, delete all notes that were attached - create action delete notes where board = board.id
 
     return (
-        <div>
+        <div className="boardHeader">
             {/* replace with loader */}
-            { boardEditLoading && <p>Board Edit Loading</p> }
+            
             { boardEditError && <p>Board Edit Error: {boardEditError}</p> }
             {editMode ? 
             <BoardEditForm board={board} onSubmit={onSubmit} /> :
@@ -32,10 +32,18 @@ const BoardHeader = () => {
                     <h1>
                         {board.name}
                     </h1>
-                    <button onClick={() => setEditMode(true)}>Edit</button>
+                    <div className="boardHeader__buttons">
+                        <button className="btnIcon btnIcon--boardHeader" onClick={() => setEditMode(true)}>
+                            <i className="fa fa-pencil"></i>
+                        </button>
+                        <button className="btnIcon btnIcon--boardHeader" onClick={() => dispatch(startDeleteBoard(board.id))}>
+                            <i className="fa fa-trash-o"></i>
+                        </button>
+                        { boardEditLoading && <img className="loader" src="/images/loader.gif" /> }
+                    </div>
+
                 </>
             }
-            {<button onClick={() => dispatch(startDeleteBoard(board.id))}>Delete</button>}
         </div>
     )
 }

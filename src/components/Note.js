@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from "react"
 import Draggable from 'react-draggable'
 import { ResizableBox } from "react-resizable"
 import { Rnd } from "react-rnd"
-import EditNoteForm from "./NoteForm"
+import EditNoteForm from "./EditNoteForm"
 import { useDispatch, useSelector } from "react-redux"
 import { startEditNote, startDeleteNote } from "../actions/notes"
 import "./note.css"
@@ -15,23 +15,19 @@ const Note = ({ note }) => {
 
     const [editMode, setEditMode] = useState(false)
     const [deleting, setDeleting] = useState(false)
+
+    const [backgroundColor, setBackgroundColor] = useState(note.backgroundColor) // add some fallback?
     const [position, setPosition] = useState({ x: note.position.x, y: note.position.y })
-    // change stack to rnd and pass size
+
     const [size, setSize] = useState({ width: note.size.width ? note.size.width : 200, 
                                     height: note.size.height ? note.size.height : 200})
     const [flagged, setFlagged] = useState(note.flagged ? note.flagged : false)
 
     const dispatch = useDispatch()
     
-    // useEffect and redux + local state or purely local state for below loader?
-    // useEffect(() => {
-    //     console.log(deleteNoteId, note.id)
-    //     if (deleteNoteId === note.id) setDeleting(false)
-    //     // console.log(loadingDelete)
-    // }, [loadingDelete])
-
     const onSubmit = (noteUpdate) => {
-        dispatch(startEditNote(note.id, noteUpdate))
+        // store backgroundColor as state in EditForm and pass it together? But we have to pass it to Note anywas so not sure
+        dispatch(startEditNote(note.id, { ...noteUpdate, backgroundColor } )) 
         setEditMode(false)
     } 
 
@@ -66,16 +62,22 @@ const Note = ({ note }) => {
         dispatch(startEditNote(note.id, { flagged: !flagged }))
     }
 
+    const handleColorChange = (color) => {
+        setBackgroundColor(color)
+    }
+
     return (
         <Rnd position={{ x: position.x, y: position.y}}
+            bounds="body"
+            cancel=".cancelDrag"
             minWidth={150} minHeight={150}
             size={{ width: size.width, height: size.height}}
             onDragStop={(e, d) => handleOnDragStop(e, d)}
             onResize={(e, direction, ref) => handleOnResize(ref)}
-            style={{backgroundColor: note.backgroundColor ? note.backgroundColor : "green"}} // change to state
+            style={{backgroundColor}}
         >
             <div className="note">
-                {editMode ? <EditNoteForm note={note} onSubmit={onSubmit} /> :
+                {editMode ? <EditNoteForm note={note} changeBackgroundColor={handleColorChange} onSubmit={onSubmit} /> :
                 <>
                     <div className="note-content">
                         <h3 className="note-header">
@@ -86,11 +88,19 @@ const Note = ({ note }) => {
                         </p>
                     </div>
 
-                    <div className="note-buttons">
-                        <button onClick={() => setEditMode(true)}>Edit</button>
-                        <button onClick={() => handleDelete(note.id)}>Delete {deleting && "loading"}</button>
-                        <button onClick={() => handleOnClickFlag()}>
-                            {flagged ? "flagged" : "no flag"}
+                    <div className="note__buttons">
+                        <button className="btnIcon cancelDrag" onClick={() => setEditMode(true)}>
+                            <i className="fa fa-pencil"></i>
+                        </button>
+                        <button className="btnIcon cancelDrag" onClick={() => handleDelete(note.id)}>
+                            { deleting ? <img className="loader" src="/images/loader.gif" /> : <i className="fa fa-trash-o"></i>}
+                        </button>
+                        <button className="btnIcon cancelDrag" onClick={() => handleOnClickFlag()}>
+                            {
+                                flagged ? 
+                                <i className="fa fa-star" aria-hidden="true"></i> :
+                                <i className="fa fa-star-o" aria-hidden="true"></i>
+                            }
                         </button>
                     </div>
                 </>

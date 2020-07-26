@@ -20,17 +20,19 @@ const BoardsList = () => {
 
     return (
 
-        <div>
+        <div className="boardsList">
             {
                 boardsListLoading ? <div>Loading...</div> :
                 boards.length === 0 ? <div>No boards</div> :
                 
                 boards.map((board) => {
                     return (
-                    // <Link to={board.id} key={board.id} onClick={() => setCurrentBoard(board)}>   
-                    <Link to={"boards/" + board.id} key={board.id}>   
-                        <BoardCard board={board}/>
-                    </Link>    
+                    // <Link to={board.id} key={board.id} onClick={() => setCurrentBoard(board)}>
+                    <div className="boardsList__boardCard" key={board.id}>   
+                        <Link className="boardCard__link" to={"/boards/" + board.id} >   
+                            <BoardCard board={board}/>
+                        </Link>
+                    </div>
                     )
                 })
             }

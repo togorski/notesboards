@@ -33,7 +33,8 @@ const NotesList = () => {
                 ))}
             </div>
             <NotesStack />
-            <button onClick={createNote}>Create New Note</button>
+            {/* add below for mobile */}
+            {/* <button onClick={createNote}>Create New Note</button> */}
             
         </div>
     )

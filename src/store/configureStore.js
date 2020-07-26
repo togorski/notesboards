@@ -2,7 +2,8 @@ import { applyMiddleware, createStore, combineReducers, compose } from 'redux'
 import { persistStore, persistReducer } from "redux-persist"
 import storage from 'redux-persist/lib/storage'
 import thunk from "redux-thunk"
-import notesReducer, { notesListReducer, noteCreateReducer, noteEditReducer, noteDeleteReducer } from "../reducers/notes"
+import authReducer from "../reducers/auth"
+import { notesListReducer, noteCreateReducer, noteEditReducer, noteDeleteReducer } from "../reducers/notes"
 import { boardEditReducer, boardsListReducer, boardCreateReducer, boardDetailsReducer, boardDeleteReducer } from "../reducers/boards"
 
 const composeEnhancers = 
@@ -19,6 +20,7 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
+    auth: authReducer,
     notesList: notesListReducer,
     noteCreate: noteCreateReducer,
     noteEdit: noteEditReducer,

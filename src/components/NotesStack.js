@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from "react"
 import { Rnd } from "react-rnd"
-import { TwitterPicker, GithubPicker } from 'react-color';
+import { GithubPicker } from 'react-color';
 import { useDispatch, useSelector } from "react-redux"
 import { startCreateNote } from "../actions/notes"
 import "./note.css"
@@ -93,7 +93,7 @@ const NoteStack = () => {
             size={size}
             style={{backgroundColor}}
         >
-            <div className="noteStack">
+            <div className="note">
                 <p>
                     Drag to create
                 </p>

@@ -18,14 +18,15 @@ export const fetchNotesError = (error) => ({
 })
 
 export const startFetchNotes = (boardId) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            var uid = getState().auth.uid
             dispatch(fetchNotesBegin())
 
             let notes = []
     
             const notesSnapshot = 
-                await database.ref("notes").orderByChild("board").equalTo(boardId).once("value")
+                await database.ref(`users/${uid}/notes`).orderByChild("board").equalTo(boardId).once("value")
             
             notesSnapshot.forEach(childSnapshot => {
                 notes.push({
@@ -76,8 +77,9 @@ export const resetCreateNote = () => ({
 })
 
 export const startCreateNote = (note, boardId) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            var uid = getState().auth.uid
             dispatch(createNoteBegin(note))
 
             const newNote = {
@@ -85,7 +87,7 @@ export const startCreateNote = (note, boardId) => {
                 ...note
             }
     
-            const noteRef = await database.ref("notes").push({...newNote})
+            const noteRef = await database.ref(`users/${uid}/notes`).push({...newNote})
             dispatch(createNoteSuccess(newNote, noteRef.key, boardId))
         } catch (error) {
             console.log(error)
@@ -114,10 +116,11 @@ export const resetDeleteNote = () => ({
 })
 
 export const startDeleteNote = (id) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            var uid = getState().auth.uid
             dispatch(deleteNoteBegin())
-            await database.ref(`notes/${id}`).remove()
+            await database.ref(`users/${uid}/notes/${id}`).remove()
             dispatch(deleteNoteSuccess(id))
         } catch (error) {
             console.log(error)
@@ -149,10 +152,11 @@ export const resetEditNote = () => ({
 })
 
 export const startEditNote = (id, updates) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         try {
+            var uid = getState().auth.uid
             dispatch(editNoteBegin())
-            await database.ref(`notes/${id}`).update(updates)
+            await database.ref(`users/${uid}/notes/${id}`).update(updates)
             dispatch(editNoteSucess(id, updates)) // jebany handling nie dziala
         } catch (error) {
             console.log(error)

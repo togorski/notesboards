@@ -31,14 +31,14 @@ const BoardPage = (props) => {
     useEffect(() => {
         if (successBoardDelete) {
             dispatch(resetDeleteBoard())
-            history.push("/")
+            history.push("/boards")
         }    
     }, [successBoardDelete])
 
     // moze wystarczy pchnac props do Board Header z nazwa
     return (
         <div>
-            <Link to="/">Back to Main</Link>
+            <Link to="/boards">Back to Main</Link>
                 {
                     loadingBoardDetails || loadingNotes ? <p>Loading</p> :
                     errorBoardDetails ? <p>Error Board Loading : {errorBoardDetails} </p> :

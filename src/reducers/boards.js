@@ -1,5 +1,4 @@
-import { combineReducers } from "redux"
-import { FETCH_BOARDS_BEGIN, FETCH_BOARDS_SUCCESS, FETCH_BOARDS_ERROR, SET_CURRENT_BOARD, DELETE_BOARD_BEGIN, DELETE_BOARD_SUCCESS, DELETE_BOARD_ERROR, FETCH_BOARD_DETAILS_BEGIN, FETCH_BOARD_DETAILS_SUCCESS, FETCH_BOARD_DETAILS_ERROR, RESET_DELETE_BOARD, RESET_FETCH_BOARD_DETAILS } from "../constants/boardsConstants"
+import { FETCH_BOARDS_BEGIN, FETCH_BOARDS_SUCCESS, FETCH_BOARDS_ERROR, SET_CURRENT_BOARD, DELETE_BOARD_BEGIN, DELETE_BOARD_SUCCESS, DELETE_BOARD_ERROR, FETCH_BOARD_DETAILS_BEGIN, FETCH_BOARD_DETAILS_SUCCESS, FETCH_BOARD_DETAILS_ERROR, RESET_DELETE_BOARD, RESET_FETCH_BOARD_DETAILS, RESET_CREATE_BOARD } from "../constants/boardsConstants"
 import { CREATE_BOARD_BEGIN, CREATE_BOARD_SUCCESS, CREATE_BOARD_ERROR } from "../constants/boardsConstants"
 import { EDIT_BOARD_BEGIN, EDIT_BOARD_SUCCESS, EDIT_BOARD_ERROR } from "../constants/boardsConstants"
 
@@ -126,6 +125,10 @@ const boardCreateReducer = (state = { board: {} }, action) => {
             return {
                 loading: false,
                 error: action.payload
+            }
+        case RESET_CREATE_BOARD:
+            return {
+                board: {}, loading: false, error: null
             }
         default:
             return state

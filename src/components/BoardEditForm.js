@@ -23,10 +23,12 @@ const BoardEditForm = ({ onSubmit, board }) => {
 
     return (
         <div>
-            <form onSubmit={handleOnSubmit}>
+            <form className="form--boardEdit" onSubmit={handleOnSubmit}>
                 {error && <p>{error}</p>}
                 <input type="text" placeholder="Board Name" onChange={handleOnChange} value={boardName}></input>
-                <button>Save</button>
+                <button className="btnIcon">
+                    <i className="fa fa-floppy-o"></i>
+                </button>
             </form>
         </div>
     )
