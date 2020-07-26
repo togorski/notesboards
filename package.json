@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "git@github.com:togorski/notesboards.git",
   "author": "<nasum2@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node server/server.js"
+  }
 }
