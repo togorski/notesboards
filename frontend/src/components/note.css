@@ -7,45 +7,6 @@ html,body {
     font-family: "Roboto", sand-serif;
  }
 
-header {
-    background: #fff;
-    color: #2A9D8F;
-    display: flex;
-    justify-content: space-between;
-    padding: 1.6rem 3rem 1.6rem 3rem;
-} 
-
-.header__logo {
-    display: flex;
-    align-items: center;
-    font-size: 3.5rem;
-}
-
-.header__appName {
-    margin-left: 1.6rem;
-}
-
-.header__userArea {
-    background: rgba(42, 157, 143, 0.1);
-    border-radius: 20px;
-    font-size: 1.6rem;
-    display: flex;
-    align-items: center;
-    padding: 1.2rem;
-}
-
-.header__photo {
-    margin-right: 1rem;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-}
-
-.header__userName {
-    display: flex;
-    flex-direction: column;
-}
-
 .content-container {
     margin: 0 auto;
     padding: 0 1.6rem;
@@ -60,66 +21,9 @@ header {
     padding-top: 3.2rem;
 }
 
-.boardHeader {
-    margin: 1.6rem 0;
-    display: flex;
-}
-
-.boardHeader__buttons {
-    margin-left: 1.2rem;
-    display: flex;
-    align-items: center;
-}
-
-.boardsList {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    justify-content: center;
-    margin-top: 3.2rem;
-    /* padding: 0 1.6rem; */
-}
-
-.boardsList__boardCard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #2A9D8F;
-    border-radius: 4px;
-    width: 20rem;
-    margin: 1.6rem;
-}
-
-.boardsList__boardCard a {
-    text-decoration: none;
-    color: #2A9D8F;
-}
-
-.boardsList__boardCard a:hover {
-    text-decoration: none;
-    color: #fff;
-}
-
-.boardsList__boardCard:hover {
-    background: #2A9D8F;
-}
-
-.boardCard__link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 1.6rem;
-}
-
 .note {
     width: 100%;
     height: 100%;
-    /* border: 1px solid black; */
-    /* border-radius: 5px;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -215,26 +119,6 @@ header {
     z-index: 10000;
 }
 
-.noteStack {
-    /* position: absolute; */
-    /* border: 1px solid black; */
-    border-radius: 5px;
-    /* background: rgb(230, 209, 253); */
-    /* margin: 10px; */
-    width: 100%;
-    height: 100%;
-    /* min-height: 150px;
-    min-width: 200px; */
-    -webkit-box-shadow: 2px 2px 9px -2px rgba(59, 59, 59, 0.5);
-    -moz-box-shadow: 2px 2px 9px -2px rgba(59, 59, 59, 0.5);
-    box-shadow: 2px 2px 9px -2px rgba(59, 59, 59, 0.5);
-}
-
-.noteStack p {
-    margin: 0;
-    padding-top: 10px;
-}
-
 textarea {
     border: none;
 }
@@ -267,10 +151,6 @@ textarea {
 
 .btnIcon:focus {
     outline: none;    
-}
-
-.btnIcon--boardHeader {
-    color: DodgerBlue; /* White text */
 }
 
 .loader {

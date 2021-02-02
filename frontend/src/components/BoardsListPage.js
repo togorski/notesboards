@@ -4,6 +4,8 @@ import BoardList from "./BoardsList"
 import Header from "./Header"
 import { startCreateBoard, startFetchBoards, resetCreateBoard } from "../actions/boards"
 import { useDispatch, useSelector } from "react-redux"
+import "./boardsListPage.css"
+
 
 const BoardsPage = (props) => {
     const dispatch = useDispatch()

@@ -3,7 +3,7 @@ import { Rnd } from "react-rnd"
 import { GithubPicker } from 'react-color';
 import { useDispatch, useSelector } from "react-redux"
 import { startCreateNote } from "../actions/notes"
-import "./note.css"
+import "./notesStack.css"
 
 const NoteStack = () => {
     // const pickerContainerRef = useRef()

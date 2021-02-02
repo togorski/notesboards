@@ -3,6 +3,7 @@ import BoardEditForm from "./BoardEditForm"
 import BoardsContext from "../context/boards-context"
 import { startEditBoard, startDeleteBoard } from "../actions/boards"
 import { useDispatch, useSelector } from "react-redux"
+import "./boardHeader.css"
 
 const BoardHeader = () => {
     const [editMode, setEditMode] = useState(false)

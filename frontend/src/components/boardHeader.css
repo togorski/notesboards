@@ -1,0 +1,14 @@
+.boardHeader {
+    margin: 1.6rem 0;
+    display: flex;
+}
+
+.boardHeader__buttons {
+    margin-left: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.btnIcon--boardHeader {
+    color: DodgerBlue; /* White text */
+}

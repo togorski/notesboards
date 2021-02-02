@@ -1,6 +1,7 @@
 import React, { useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { startLogin, startLogout } from "../actions/auth"
+import { startLogin } from "../actions/auth"
+import "./loginPage.css"
 
 const LoginPage = () => {
     const dispatch = useDispatch()
@@ -13,10 +14,19 @@ const LoginPage = () => {
     
     return (
         <div>
-            <div>{authError ? authError : "No error"}</div>
-            <div>
-                <button onClick={handleLogin}>Login with Google</button>
-                <button onClick={() => dispatch(startLogout())}>Logout</button>
+            <div className="container">
+                <div className="logo">
+                    <i className="fa fa-sticky-note-o"></i>
+                    <strong className="appName">Notes.</strong>
+                </div>
+                <div className="error">
+                    {authError}
+                </div>
+                <button className="login login--google" onClick={handleLogin}>
+                    <i className="fa fa-google fa-fw"></i>
+                    Login with Google
+                </button>
+                {/* <button onClick={() => dispatch(startLogout())}>Logout</button> */}
             </div>
             
         </div>

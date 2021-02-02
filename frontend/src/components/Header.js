@@ -1,6 +1,7 @@
 import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { startLogout } from "../actions/auth"
+import "./header.css"
 
 const Header = () => {
     const dispatch = useDispatch()

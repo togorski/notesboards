@@ -8,3 +8,23 @@
     width: 100px;
     height: 100px;
   }
+
+  .noteStack {
+    /* position: absolute; */
+    /* border: 1px solid black; */
+    border-radius: 5px;
+    /* background: rgb(230, 209, 253); */
+    /* margin: 10px; */
+    width: 100%;
+    height: 100%;
+    /* min-height: 150px;
+    min-width: 200px; */
+    -webkit-box-shadow: 2px 2px 9px -2px rgba(59, 59, 59, 0.5);
+    -moz-box-shadow: 2px 2px 9px -2px rgba(59, 59, 59, 0.5);
+    box-shadow: 2px 2px 9px -2px rgba(59, 59, 59, 0.5);
+}
+
+.noteStack p {
+    margin: 0;
+    padding-top: 10px;
+}

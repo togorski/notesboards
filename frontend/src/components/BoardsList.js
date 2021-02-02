@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import BoardCard from "./BoardCard"
 import { startFetchBoards } from "../actions/boards"
 // import { startFetchBoards, setCurrentBoard } from "../actions/boards"
+import "./boardsList.css"
 
 const BoardsList = () => {
     const dispatch = useDispatch()
