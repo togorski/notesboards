@@ -15,3 +15,4 @@ The color can be adjusted by picking color either in notes stack or by editing a
 To do's:
 - find better way to style components (maybe styled components or scss?)
 - finish styling remaining elements + proceed with files split
+- fix bug - when resizing note through left border it changes position
