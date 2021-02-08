@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { GithubPicker } from 'react-color'
 import colors from "../fixtures/notesColors"
+import "./editNoteForm.css"
 
 const NoteForm = ({ note, onSubmit, changeBackgroundColor }) => {
 
@@ -57,22 +58,24 @@ const NoteForm = ({ note, onSubmit, changeBackgroundColor }) => {
     }
 
     return (
-        <div >
-            <form className="cancelDrag" onSubmit={handleSubmit}>
-                
-                <input type="text" onChange={(e) => setTitle(e.target.value)} value={title}/>
-                <textarea onChange={(e) => setBody(e.target.value)} value={body}></textarea>
-                <button type="submit">Save</button>
+        <form className="editNote" onSubmit={handleSubmit}>
+            <div className="editNote__inputs cancelDrag">
+                <input className="editNote__title" type="text" onChange={(e) => setTitle(e.target.value)} value={title}/>
+                <textarea className="editNote__text" onChange={(e) => setBody(e.target.value)} value={body}></textarea>
+            </div>
+            <div className="editNote__buttons">
+                <button className="editNote__button cancelDrag" type="submit">Save</button>
                 <div>
-                    <button type="button" className="cancelDrag" onClick={handleOnClick}>Pick Color</button>
+                    <button type="button" className="editNote__button cancelDrag" onClick={handleOnClick}>Color</button>
                     { showColorPicker ? 
                     <div id="popoverPicker" className="cancelDrag" style={ popover }>
                         <div id="pickerContainer" className="cancelDrag" onClick={handleHideColorPicker} style={ cover } />
                         <GithubPicker className="cancelDrag" colors={colors} onChangeComplete={handleOnColorChangeComplete}/>
-                    </div>: null }
+                    </div> : null }
                 </div>
-            </form>
-        </div>
+            </div>
+            
+        </form>
     )
 }
 

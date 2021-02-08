@@ -67,7 +67,8 @@ const Note = ({ note }) => {
     }
 
     return (
-        <Rnd position={{ x: position.x, y: position.y}}
+        <Rnd className="note--instance" 
+            position={{ x: position.x, y: position.y}}
             bounds="body"
             cancel=".cancelDrag"
             minWidth={150} minHeight={150}
@@ -89,13 +90,13 @@ const Note = ({ note }) => {
                     </div>
 
                     <div className="note__buttons">
-                        <button className="btnIcon cancelDrag" onClick={() => setEditMode(true)}>
+                        <button className="btnIcon note__button cancelDrag" onClick={() => setEditMode(true)}>
                             <i className="fa fa-pencil"></i>
                         </button>
-                        <button className="btnIcon cancelDrag" onClick={() => handleDelete(note.id)}>
+                        <button className="btnIcon note__button cancelDrag" onClick={() => handleDelete(note.id)}>
                             { deleting ? <img className="loader" src="/images/loader.gif" /> : <i className="fa fa-trash-o"></i>}
                         </button>
-                        <button className="btnIcon cancelDrag" onClick={() => handleOnClickFlag()}>
+                        <button className="btnIcon note__button cancelDrag" onClick={() => handleOnClickFlag()}>
                             {
                                 flagged ? 
                                 <i className="fa fa-star" aria-hidden="true"></i> :

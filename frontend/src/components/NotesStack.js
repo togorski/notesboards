@@ -7,13 +7,13 @@ import colors from "../fixtures/notesColors"
 import "./notesStack.css"
 
 const NoteStack = () => {
-    // const pickerContainerRef = useRef()
+    const popoverPickerRef = useRef()
 
     const boardId = useSelector(state => state.boardDetails.board.id)
 
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [initPosition, setInitPosition] = useState({ x: 0, y: 0 })
-    const [backgroundColor, setBackgroundColor] = useState(colors[2])
+    const [backgroundColor, setBackgroundColor] = useState(colors[1]) // maybe random color here?
 
     const width = 200
     const height = 200
@@ -23,6 +23,7 @@ const NoteStack = () => {
 
     const popover = {
         position: 'absolute',
+        top: '95%',
         zIndex: '2',
     }
 
@@ -36,10 +37,11 @@ const NoteStack = () => {
 
     // it should hide picker when clicked outside of the element
     const handleClickOutsidePicker = useCallback((e) => {
-            const pickerPopover = document.getElementById('popoverPicker')
-            
+            // const pickerPopover = document.getElementById('popoverPicker')
+            // console.log(popoverPickerRef.current)
             // if picker is present and clicked element is not inside popover - hide picker
-            pickerPopover && !pickerPopover.contains(e.target) && setShowColorPicker(false)
+            // pickerPopover && !pickerPopover.contains(e.target) && setShowColorPicker(false)
+            popoverPickerRef.current && !popoverPickerRef.current.contains(e.target) && setShowColorPicker(false)
         }, [])
 
     useEffect(() => {
@@ -82,7 +84,8 @@ const NoteStack = () => {
     }
     
     return (
-        <Rnd bounds="body"
+        <Rnd id="noteStack" 
+            bounds="body"
             cancel=".cancelDrag"
             enableResizing={false}
             onDragStart={(e,d) => handleOnDragStart(e,d)}
@@ -92,12 +95,12 @@ const NoteStack = () => {
             style={{backgroundColor}}
         >
             <div className="note">
-                <p>
+                <p className="note__info">
                     Drag to create
                 </p>
-                <button className="cancelDrag" onClick={handleOnClick}>Pick Color</button>
+                <button className="pickerButton cancelDrag" onClick={handleOnClick}>Pick Color</button>
                 { showColorPicker ? 
-                <div id="popoverPicker" className="cancelDrag" style={ popover }>
+                <div className="cancelDrag popoverPicker" style={ popover } ref={popoverPickerRef}>
                     <div id="pickerContainer" className="cancelDrag" onClick={handleHideColorPicker} style={ cover } />
                     <GithubPicker className="cancelDrag" colors={colors} onChangeComplete={handleOnColorChangeComplete}/>
                 </div>: 

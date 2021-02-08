@@ -4,7 +4,7 @@ html,body {
     width: 100%;
     margin: 0;
     box-sizing: border-box;
-    font-family: "Roboto", sand-serif;
+    font-family: "Roboto", sans-serif;
  }
 
 .content-container {
@@ -66,10 +66,10 @@ html,body {
 .note__buttons {
     display: flex;
     justify-content: space-between;
-    margin: 15px 5px;
+    margin: 7px 5px;
 }
 
-.note button {
+.note__button {
     width: 30%;
 }
 
@@ -81,33 +81,20 @@ html,body {
     width: 100%;
 } */
 
-.note textarea {
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
-    box-sizing:border-box;
-    resize: none;
-    min-width: 100%;
-    width: 100%;
-}
-
-.note input {
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
-    box-sizing:border-box;
-    min-width: 100%;
-    width: 100%;
-}
-
-
 .react-draggable {
     /* border: 1px solid rgba(245, 245, 245, 0.6); */
     border-radius: 4px;
-    box-shadow: 0px -7px 0px 0px rgba(245, 245, 245, 0.4) inset, 
-    0px 2px 12px -4px rgba(70, 45, 45, 0.4);
+    box-shadow: 0px 2px 12px -4px rgba(70, 45, 45, 0.4);
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
+}
+
+/* below is to differentiate between stack and note */
+.react-draggable.note--instance {
+    box-shadow: 0px -7px 0px 0px rgba(245, 245, 245, 0.4) inset,
+                0px 2px 12px -4px rgba(70, 45, 45, 0.4);
 }
 
 .react-draggable:active {
@@ -118,25 +105,6 @@ html,body {
 
 .react-draggable:hover {
     z-index: 10000;
-}
-
-textarea {
-    border: none;
-}
-
-.form--boardEdit {
-    display: flex;
-    height: 100%;
-    margin-top: 1rem;
-}
-
-.form--boardEdit input {
-    /* sccs the same font size as before edit */
-    font-size: 2em;
-    font-weight: bold;
-    border-top: none;
-    border-right: none;
-    border-left: none;
 }
 
 .btnIcon {
@@ -159,7 +127,7 @@ textarea {
     transition: .25s;
 }
 
-.btnIcon i:hover {
+.note__button i:hover {
     /* color: #f1f1f1; */
     color: #fff;
 }
