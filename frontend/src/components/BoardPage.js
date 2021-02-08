@@ -7,6 +7,7 @@ import { resetNotesList, startFetchNotes, resetCreateNote, resetNotesReducers } 
 import { startFetchBoardDetails, resetDeleteBoard, resetFetchBoardDetails } from "../actions/boards"
 import selectBoard from "../selectors/boards"
 import { Link } from "react-router-dom"
+import "./boardPage.css"
 
 // const BoardPage = ({ notesActions, boardsActions, notesLoading, notes, boardsList, currentBoard, match }) => {
 const BoardPage = (props) => {
@@ -38,16 +39,16 @@ const BoardPage = (props) => {
     // moze wystarczy pchnac props do Board Header z nazwa
     return (
         <div>
-            <Link to="/boards">Back to Main</Link>
-                {
-                    loadingBoardDetails || loadingNotes ? <p>Loading</p> :
-                    errorBoardDetails ? <p>Error Board Loading : {errorBoardDetails} </p> :
-                    errorNotes ? <p>{currentBoard.name} - Failed to Load Notes</p> :
-                    <>
-                        <BoardHeader />
-                        <NotesList />
-                    </>
-                }
+            <Link to="/boards" className="back" >Back to Main</Link>
+            {
+                loadingBoardDetails || loadingNotes ? <p>Loading</p> :
+                errorBoardDetails ? <p>Error Board Loading : {errorBoardDetails} </p> :
+                errorNotes ? <p>{currentBoard.name} - Failed to Load Notes</p> :
+                <>
+                    <BoardHeader />
+                    <NotesList />
+                </>
+            }
             {/* <NotesContext.Provider value={{ notesActions, notes, boardId }}> 
                 <NotesList />
                 <NoteForm onSubmit={onSubmit}/> 

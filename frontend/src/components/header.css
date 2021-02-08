@@ -1,6 +1,7 @@
 header {
     background: #fff;
     color: #2A9D8F;
+    /* color: #649986; */
     display: flex;
     justify-content: space-between;
     padding: 1.6rem 3rem 1.6rem 3rem;
@@ -33,4 +34,8 @@ header {
 .header__userName {
     display: flex;
     flex-direction: column;
+}
+
+.button--logout {
+    margin-top: 0.5rem;
 }

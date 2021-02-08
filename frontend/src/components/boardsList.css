@@ -16,6 +16,7 @@
     border-radius: 4px;
     width: 20rem;
     margin: 1.6rem;
+    transition: 0.25s;
 }
 
 .boardsList__boardCard a {

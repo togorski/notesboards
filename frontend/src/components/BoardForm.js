@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import history from '../history'
 import { startCreateBoard } from "../actions/boards"
+import "./boardForm.css"
 
 const BoardForm = () => {
     const [boardName, setBoardName] = useState("")
@@ -33,10 +34,10 @@ const BoardForm = () => {
 
     return (
         <div>
-            <form onSubmit={handleOnSubmit}>
+            <form className="boardForm" onSubmit={handleOnSubmit}>
                 {error && <p>{error}</p>}
-                <input type="text" placeholder="Board Name" onChange={handleOnChange} value={boardName}></input>
-                <button>Create</button>
+                <input className="boardForm__input" type="text" placeholder="Board Name" onChange={handleOnChange} value={boardName}></input>
+                <button className="button button--create">Create</button>
             </form>
         </div>
     )

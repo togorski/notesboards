@@ -2,6 +2,7 @@ import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { startLogout } from "../actions/auth"
 import "./header.css"
+import "./common.css" // maybe it should be imported in index
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -18,7 +19,7 @@ const Header = () => {
                     <img className="header__photo" src={photoURL} />
                     <div className="header__userName">
                         <div>Hello, <strong>{displayName}</strong></div>
-                        <button onClick={() => dispatch(startLogout())}>Logout</button>
+                        <button className="button button--logout" onClick={() => dispatch(startLogout())}>Logout</button>
                     </div>
                     
                     

@@ -3,15 +3,13 @@ import { Rnd } from "react-rnd"
 import { GithubPicker } from 'react-color';
 import { useDispatch, useSelector } from "react-redux"
 import { startCreateNote } from "../actions/notes"
+import colors from "../fixtures/notesColors"
 import "./notesStack.css"
 
 const NoteStack = () => {
     // const pickerContainerRef = useRef()
 
     const boardId = useSelector(state => state.boardDetails.board.id)
-
-    const colors = ['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB', 
-    '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB']
 
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [initPosition, setInitPosition] = useState({ x: 0, y: 0 })
